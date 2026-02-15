@@ -1,33 +1,13 @@
-const { User } = require('../src/db/models/user');
+const { User } = require('../db/models');
 
 class UserService {
-    static async getAllUsers() {
-        return await User.findAll()
+    // Найти пользователя по email
+    static async getUserByEmail(email) {
+        return (await User.findOne({ where: { email } }))?.get();
     }
-
-    static async getUserById(id) {
-        return await User.findByPk(id);
-    }
-
+    // Создаём пользователя в БД
     static async createNewUser(userData) {
-        return await User.create(userData);
-    }
-
-    static async deleteUserById(id) {
-        const userToDelete = await User.findByPk(id);
-        if (!userToDelete) return null;
-        return await userToDelete.destroy();
-    }
-
-    static async updateUserById(id, userData) {
-        const userToUpdate = await User.findByPk(id);
-        const { title, text } = userData;
-        if (!userToUpdate) return null;
-        if (title) { userToUpdate.title = title }
-        if (text) { userToUpdate.text = text }
-
-        await userToUpdate.save();
-        return userToUpdate;
+        return (await User.create(userData))?.get();
     }
 }
 

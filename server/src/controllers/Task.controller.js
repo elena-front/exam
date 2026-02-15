@@ -43,6 +43,7 @@ class TaskController {
 
     static async createTask(req, res) {
         const { title, text } = req.body;
+        const user_id = res.locals.user.id;
 
         if (!title || typeof title !== 'string' || title.trim().length === 0) {
             return res.status(400).json(formatResponse(400, 'title should not be empty', null, 'title should not be empty'))
@@ -56,7 +57,7 @@ class TaskController {
             return res.status(400).json(formatResponse(400, 'uncorrect ID format', null, 'uncorrect ID format'))
         }
         try {
-            const newTask = await TaskService.createNewTask({ title, text });
+            const newTask = await TaskService.createNewTask({ title, text, user_id });
 
             res.status(201).json(formatResponse(201, 'task created', newTask, null));
 
@@ -68,17 +69,25 @@ class TaskController {
     }
 
     static async deleteTask(req, res) {
-       const { id } = req.params;
+        const { id } = req.params;
+        const user_id = res.locals.user.id;
+
 
         if (isNaN(Number(id))) {
             return res.status(400).json(formatResponse(400, 'uncorrect ID format', null, 'uncorrect ID format'))
         }
 
         try {
+            const task = await TaskService.getTaskById(id);
+            if (task && (user_id !== task.user_id)) {
+                return res.status(403).json(formatResponse(403, 'forbidden', null, 'forbidden'));
+            }
+
+
             const deletedTask = await TaskService.deleteTaskById({ id });
 
-            if(!deletedTask) {return res.status(404).json(formatResponse(404, 'not found', null, 'not found'));}
-      
+            if (!deletedTask) { return res.status(404).json(formatResponse(404, 'not found', null, 'not found')); }
+
 
             res.status(200).json(formatResponse(200, 'task deleted'));
 
@@ -89,19 +98,25 @@ class TaskController {
         }
     }
 
-        static async updateTask(req, res) {
-       const { id } = req.params;
-       const {title, text} = req.body;
+    static async updateTask(req, res) {
+        const { id } = req.params;
+        const { title, text } = req.body;
+        const user_id = res.locals.user.id;
 
         if (isNaN(Number(id))) {
             return res.status(400).json(formatResponse(400, 'uncorrect ID format', null, 'uncorrect ID format'))
         }
 
         try {
-            const updatedTask = await TaskService.updateTaskById(Number(id), {title, text});
+            const task = await TaskService.getTaskById(id);
+            if (task && (user_id !== task.user_id)) {
+                return res.status(403).json(formatResponse(403, 'forbidden', null, 'forbidden'));
+            }
 
-            if(!updatedTask) {return res.status(404).json(formatResponse(404, 'not found', null, 'not found'));}
-      
+            const updatedTask = await TaskService.updateTaskById(Number(id), { title, text });
+
+            if (!updatedTask) { return res.status(404).json(formatResponse(404, 'not found', null, 'not found')); }
+
 
             res.status(200).json(formatResponse(200, 'task updated'));
 
@@ -111,5 +126,5 @@ class TaskController {
             res.status(500).json(formatResponse(500, 'server inner error', [], error))
         }
     }
-} 
+}
 module.exports = TaskController;
