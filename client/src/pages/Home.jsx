@@ -9,6 +9,8 @@ export default function Home({ user }) {
       const loaded = await TaskApi.getAllTasks();
       setTasks(loaded);
     }
+
+    load();
   }, []);
 
   return (

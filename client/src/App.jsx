@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import "./App.css";
 import AppRouter from "./app/routing/AppRouter";
 import UserApi from "./entities/user/UserApi";
 
