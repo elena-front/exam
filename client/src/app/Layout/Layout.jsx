@@ -1,7 +1,7 @@
 import { Outlet, NavLink, Link } from "react-router";
-import { CLIENT_ROUTES } from "../../../shared/consts/clientRoutes";
+import { CLIENT_ROUTES } from "../../shared/consts/clientRoutes";
 import "./Layout.css";
-import UserApi from "../../../entities/user/UserApi";
+import UserApi from "../../entities/user/UserApi";
 
 export default function Layout({ user, setUser }) {
   const handleSignOut = async () => {
@@ -11,14 +11,13 @@ export default function Layout({ user, setUser }) {
 
   return (
     <>
-      <header className="header">
+      <header>
         <div className="container header__inner">
-          <Link to="/" className="brand">
-            <span className="brand__logo" aria-hidden="true" />
-            <span className="brand__text">📚 Книжный червь</span>
+          <Link to="/">
+            <span>🌈Миссия: Выполнить</span>
           </Link>
 
-          <nav className="nav">
+          <nav>
             <NavLink
               to="/"
               end
@@ -26,7 +25,7 @@ export default function Layout({ user, setUser }) {
                 `nav__link ${isActive ? "nav__link--active" : ""}`
               }
             >
-              📕 Главная
+              ✨ Главная
             </NavLink>
 
             <NavLink
@@ -35,7 +34,7 @@ export default function Layout({ user, setUser }) {
                 `nav__link ${isActive ? "nav__link--active" : ""}`
               }
             >
-              + Добавить книгу
+              + Добавить задачу ❤️
             </NavLink>
 
             <NavLink
@@ -44,11 +43,11 @@ export default function Layout({ user, setUser }) {
                 `nav__link ${isActive ? "nav__link--active" : ""}`
               }
             >
-              ♡︎ ︎Избранное
+              🍭 ︎Мои задачи
             </NavLink>
           </nav>
 
-          <div className="header__actions">
+          <div>
             {!user && (
               <Link to={CLIENT_ROUTES.AUTH} className="btn btn--ghost">
                 ⎆ Войти
@@ -56,7 +55,7 @@ export default function Layout({ user, setUser }) {
             )}
 
             {user && (
-              <div className="authArea">
+              <div>
                 Привет, {user.username}
                 <button onClick={handleSignOut} className="btn btn--ghost">
                   Выйти
@@ -71,11 +70,7 @@ export default function Layout({ user, setUser }) {
         <Outlet />
       </main>
 
-      <footer className="footer">
-        <div className="container footer__inner">
-          <span>© 2026 ООО "Книжный червь"</span>
-        </div>
-      </footer>
+      <footer></footer>
     </>
   );
 }

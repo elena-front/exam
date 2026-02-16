@@ -1,4 +1,5 @@
 import { Routes, Route } from "react-router";
+import  Layout  from "../Layout/Layout";
 
 export default function AppRouter({ user, setUser }) {
   return (
@@ -6,7 +7,11 @@ export default function AppRouter({ user, setUser }) {
       <Route
         path={CLIENT_ROUTES.MAIN_PAGE}
         element={<Layout user={user} setUser={setUser} />}
-      ></Route>
+      >
+        <Route index element={<Home user={user} />} />
+
+
+      </Route>
     </Routes>
   );
 }
